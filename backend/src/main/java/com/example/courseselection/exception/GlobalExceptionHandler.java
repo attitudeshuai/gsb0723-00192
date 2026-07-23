@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, String>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         Map<String, String> response = new HashMap<>();
-        response.put("message", "无法删除：该记录被其他数据引用（如学生属于该专业，或选课记录关联该课程/学生）。请先删除相关关联数据。");
+        response.put("message", "无法删除：该学生已存在");
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
