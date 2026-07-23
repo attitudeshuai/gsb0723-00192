@@ -39,7 +39,7 @@ public class SelectionController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         Selection selection = selectionService.findById(id).orElse(null);
-        if (selection != null && selection.getGrade() == null) {
+        if (selection != null && selection.getGrade() != null) {
             throw new RuntimeException("已录入成绩不可退选");
         }
         selectionService.deleteById(id);

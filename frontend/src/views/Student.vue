@@ -424,6 +424,30 @@ const handleSave = async () => {
 onMounted(() => {
   fetchData()
 })
+
+const handleChangePassword = (row) => {
+  passwordForm.value.id = row.id
+  passwordForm.value.newPassword = ''
+  passwordForm.value.confirmPassword = ''
+  passwordDialogVisible.value = true
+}
+
+const submitPasswordChange = async () => {
+  if (!passwordFormRef.value) return
+  await passwordFormRef.value.validate(async (valid) => {
+    if (valid) {
+      try {
+        await request.put(`/students/${passwordForm.value.id}/password`, passwordForm.value.newPassword, {
+          headers: { 'Content-Type': 'text/plain' }
+        })
+        ElMessage.success('密码修改成功')
+        passwordDialogVisible.value = false
+      } catch (error) {
+        ElMessage.error('密码修改失败')
+      }
+    }
+  })
+}
 </script>
 
 <style scoped>
