@@ -234,7 +234,8 @@ const handleSave = async () => {
     dialogVisible.value = false
     fetchData()
   } catch (error) {
-    ElMessage.error('保存失败')
+    const msg = error.response?.data?.message || '保存失败'
+    ElMessage.error(msg)
   }
 }
 

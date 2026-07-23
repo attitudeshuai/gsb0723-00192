@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/students")
@@ -42,7 +43,8 @@ public class StudentController {
     }
 
     @PutMapping("/{id}/password")
-    public void updatePassword(@PathVariable Long id, @RequestBody String newPassword) {
+    public void updatePassword(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        String newPassword = body.get("newPassword");
         studentService.updatePassword(id, newPassword);
     }
 
