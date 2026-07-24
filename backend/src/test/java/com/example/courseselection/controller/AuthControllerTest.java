@@ -75,7 +75,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void login_studentWithNullPassword_default123456Works() {
+    void login_studentWithNullPassword_123456Fails() {
         student.setPassword(null);
         LoginRequest req = new LoginRequest();
         req.setUsername("2023001");
@@ -86,9 +86,7 @@ class AuthControllerTest {
 
         ResponseEntity<?> resp = authController.login(req);
 
-        assertEquals(HttpStatus.OK, resp.getStatusCode());
-        Map<?, ?> body = (Map<?, ?>) resp.getBody();
-        assertEquals("student", body.get("role"));
+        assertEquals(HttpStatus.UNAUTHORIZED, resp.getStatusCode());
     }
 
     @Test

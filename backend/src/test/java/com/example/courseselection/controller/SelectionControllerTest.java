@@ -3,6 +3,7 @@ package com.example.courseselection.controller;
 import com.example.courseselection.entity.Course;
 import com.example.courseselection.entity.Selection;
 import com.example.courseselection.entity.Student;
+import com.example.courseselection.exception.GradeAlreadyEnteredException;
 import com.example.courseselection.service.SelectionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ class SelectionControllerTest {
     void delete_courseWithGrade_shouldThrow() {
         when(selectionService.findById(1L)).thenReturn(Optional.of(gradedSelection));
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> selectionController.delete(1L));
+        GradeAlreadyEnteredException ex = assertThrows(GradeAlreadyEnteredException.class, () -> selectionController.delete(1L));
         assertEquals("已录入成绩不可退选", ex.getMessage());
         verify(selectionService, never()).deleteById(anyLong());
     }

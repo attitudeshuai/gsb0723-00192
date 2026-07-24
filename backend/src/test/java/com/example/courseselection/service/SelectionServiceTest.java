@@ -3,6 +3,7 @@ package com.example.courseselection.service;
 import com.example.courseselection.entity.Course;
 import com.example.courseselection.entity.Selection;
 import com.example.courseselection.entity.Student;
+import com.example.courseselection.exception.DuplicateSelectionException;
 import com.example.courseselection.repository.SelectionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,7 +77,7 @@ class SelectionServiceTest {
     void save_grade150_shouldThrow() {
         newSelection.setGrade(150.0);
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> selectionService.save(newSelection));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> selectionService.save(newSelection));
         assertEquals("成绩必须在 0 到 100 之间", ex.getMessage());
         verify(selectionRepository, never()).save(any());
     }
@@ -85,7 +86,7 @@ class SelectionServiceTest {
     void save_gradeNegative10_shouldThrow() {
         newSelection.setGrade(-10.0);
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> selectionService.save(newSelection));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> selectionService.save(newSelection));
         assertEquals("成绩必须在 0 到 100 之间", ex.getMessage());
         verify(selectionRepository, never()).save(any());
     }
@@ -107,7 +108,7 @@ class SelectionServiceTest {
         newSelection.setGrade(null);
         when(selectionRepository.existsByStudentIdAndCourseId(1L, 1L)).thenReturn(true);
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> selectionService.save(newSelection));
+        DuplicateSelectionException ex = assertThrows(DuplicateSelectionException.class, () -> selectionService.save(newSelection));
         assertEquals("该学生已选过此课程，不能重复选课", ex.getMessage());
         verify(selectionRepository, never()).save(any());
     }

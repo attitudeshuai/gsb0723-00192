@@ -437,8 +437,8 @@ const submitPasswordChange = async () => {
   await passwordFormRef.value.validate(async (valid) => {
     if (valid) {
       try {
-        await request.put(`/students/${passwordForm.value.id}/password`, passwordForm.value.newPassword, {
-          headers: { 'Content-Type': 'text/plain' }
+        await request.put(`/students/${passwordForm.value.id}/password`, {
+          newPassword: passwordForm.value.newPassword
         })
         ElMessage.success('密码修改成功')
         passwordDialogVisible.value = false

@@ -1,6 +1,7 @@
 package com.example.courseselection.controller;
 
 import com.example.courseselection.dto.ClassStatsDTO;
+import com.example.courseselection.dto.PasswordUpdateRequest;
 import com.example.courseselection.entity.Student;
 import com.example.courseselection.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +39,12 @@ public class StudentController {
     @PutMapping("/{id}")
     public Student update(@PathVariable Long id, @RequestBody Student student) {
         student.setId(id);
-        return studentService.save(student);
+        return studentService.update(student);
     }
 
     @PutMapping("/{id}/password")
-    public void updatePassword(@PathVariable Long id, @RequestBody String newPassword) {
-        studentService.updatePassword(id, newPassword);
+    public void updatePassword(@PathVariable Long id, @RequestBody PasswordUpdateRequest request) {
+        studentService.updatePassword(id, request.getNewPassword());
     }
 
     @DeleteMapping("/{id}")

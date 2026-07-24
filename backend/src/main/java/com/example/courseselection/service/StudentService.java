@@ -5,6 +5,7 @@ import com.example.courseselection.entity.Student;
 import com.example.courseselection.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,10 +27,21 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
+    @Transactional
+    public Student update(Student student) {
+        Student existing = studentRepository.findById(student.getId())
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+        if (student.getPassword() == null) {
+            student.setPassword(existing.getPassword());
+        }
+        return studentRepository.save(student);
+    }
+
     public List<Student> saveAll(List<Student> students) {
         return studentRepository.saveAll(students);
     }
 
+    @Transactional
     public void updatePassword(Long id, String newPassword) {
         Student student = studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found"));
         student.setPassword(newPassword);
