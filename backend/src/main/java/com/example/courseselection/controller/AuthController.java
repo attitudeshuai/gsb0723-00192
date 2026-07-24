@@ -40,10 +40,12 @@ public class AuthController {
         var studentOpt = studentRepository.findByStudentNumber(loginRequest.getUsername());
         if (studentOpt.isPresent()) {
             var student = studentOpt.get();
-            String dbPassword = student.getPassword();
-            if (dbPassword == null) dbPassword = "123456";
+            // Check password (assuming password field exists and is populated)
+            String dbPassword = student.getPassword(); 
+            // Default to 123456 if null (for compatibility with old data if not migrated)
+            if (dbPassword == null) dbPassword = "123456"; 
             
-            if (dbPassword.equals(loginRequest.getPassword())) {
+            if (dbPassword != null && dbPassword.equals(loginRequest.getPassword())) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("token", "student-token-" + student.getId());
                 response.put("username", student.getName());

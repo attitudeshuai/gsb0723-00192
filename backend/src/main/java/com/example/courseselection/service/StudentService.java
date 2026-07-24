@@ -23,11 +23,31 @@ public class StudentService {
     }
 
     public Student save(Student student) {
+        if (student.getId() == null && (student.getPassword() == null || student.getPassword().isEmpty())) {
+            student.setPassword("123456");
+        }
         return studentRepository.save(student);
     }
 
     public List<Student> saveAll(List<Student> students) {
+        for (Student s : students) {
+            if (s.getPassword() == null || s.getPassword().isEmpty()) {
+                s.setPassword("123456");
+            }
+        }
         return studentRepository.saveAll(students);
+    }
+
+    public Student updateStudent(Long id, Student studentData) {
+        Student existing = studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found"));
+        existing.setStudentNumber(studentData.getStudentNumber());
+        existing.setName(studentData.getName());
+        existing.setGender(studentData.getGender());
+        existing.setBirthDate(studentData.getBirthDate());
+        existing.setHometown(studentData.getHometown());
+        existing.setClassName(studentData.getClassName());
+        existing.setMajor(studentData.getMajor());
+        return studentRepository.save(existing);
     }
 
     public void updatePassword(Long id, String newPassword) {

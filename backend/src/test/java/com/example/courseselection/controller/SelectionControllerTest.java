@@ -73,11 +73,14 @@ class SelectionControllerTest {
     }
 
     @Test
-    void delete_selectionNotFound_shouldSucceed() {
+    void delete_selectionNotFound_shouldThrowException() {
         when(selectionService.findById(99L)).thenReturn(Optional.empty());
 
-        selectionController.delete(99L);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            selectionController.delete(99L);
+        });
 
-        verify(selectionService, times(1)).deleteById(99L);
+        assertEquals("选课记录不存在", exception.getMessage());
+        verify(selectionService, never()).deleteById(any());
     }
 }
