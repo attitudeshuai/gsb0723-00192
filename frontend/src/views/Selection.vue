@@ -77,7 +77,7 @@
       width="500px"
       destroy-on-close
     >
-      <el-form :model="form" label-width="100px">
+      <el-form :model="form" label-width="100px" :rules="rules" ref="formRef">
         <el-form-item label="学生" required>
           <el-select 
             v-model="form.studentId" 
@@ -110,8 +110,8 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="成绩">
-          <el-input-number v-model="form.grade" :min="0" :max="100" style="width: 100%" />
+        <el-form-item label="成绩" prop="grade">
+          <el-input-number v-model="form.grade" :controls="false" :step="1" style="width: 100%" placeholder="0 到 100，留空表示未录入" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -146,6 +146,26 @@ const form = ref({
   courseId: null,
   grade: null
 })
+
+const formRef = ref(null)
+
+const rules = {
+  grade: [
+    {
+      validator: (rule, value, callback) => {
+        // Empty is allowed (未录入); otherwise it must be a number within [0, 100].
+        if (value === null || value === undefined || value === '') {
+          callback()
+        } else if (typeof value !== 'number' || Number.isNaN(value) || value < 0 || value > 100) {
+          callback(new Error('成绩必须在 0 到 100 之间'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur'
+    }
+  ]
+}
 
 const filteredData = computed(() => {
   if (!searchQuery.value) return tableData.value
@@ -218,6 +238,10 @@ const handleDelete = (row) => {
 }
 
 const handleSave = async () => {
+  if (formRef.value) {
+    const valid = await formRef.value.validate().catch(() => false)
+    if (!valid) return
+  }
   try {
     const payload = {
       id: form.value.id,
@@ -234,7 +258,8 @@ const handleSave = async () => {
     dialogVisible.value = false
     fetchData()
   } catch (error) {
-    ElMessage.error('保存失败')
+    const msg = error.response?.data?.message || '保存失败'
+    ElMessage.error(msg)
   }
 }
 

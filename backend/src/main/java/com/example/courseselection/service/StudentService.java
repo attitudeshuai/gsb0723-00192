@@ -26,6 +26,16 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
+    public Student update(Long id, Student student) {
+        student.setId(id);
+        // Never overwrite an existing password with null when the update payload
+        // omits it (e.g. the admin edit form does not carry the password field).
+        if (student.getPassword() == null) {
+            studentRepository.findById(id).ifPresent(existing -> student.setPassword(existing.getPassword()));
+        }
+        return studentRepository.save(student);
+    }
+
     public List<Student> saveAll(List<Student> students) {
         return studentRepository.saveAll(students);
     }

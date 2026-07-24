@@ -27,7 +27,7 @@ public class SelectionService {
     }
 
     public Selection save(Selection selection) {
-        if (selection.getGrade() != null && selection.getGrade() >= 0 && selection.getGrade() <= 100) {
+        if (selection.getGrade() != null && (selection.getGrade() < 0 || selection.getGrade() > 100)) {
             throw new RuntimeException("成绩必须在 0 到 100 之间");
         }
         return selectionRepository.save(selection);

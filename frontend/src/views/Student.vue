@@ -408,6 +408,9 @@ const handleSave = async () => {
       ...form.value,
       major: { id: form.value.majorId }
     }
+    // The student form never edits the password; drop it so a null/stale value
+    // can't overwrite the stored password on update.
+    delete payload.password
     if (isEdit.value) {
       await request.put(`/students/${form.value.id}`, payload)
     } else {
