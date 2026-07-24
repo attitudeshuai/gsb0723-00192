@@ -94,15 +94,6 @@ public class CourseSelectionApplication {
                 s2.setPassword("123456");
                 studentRepository.save(s2);
                 System.out.println("Initialized students");
-            } else {
-                // Fix existing students with null passwords
-                studentRepository.findAll().forEach(s -> {
-                    if (s.getPassword() == null) {
-                        s.setPassword("123456");
-                        studentRepository.save(s);
-                        System.out.println("Updated password for student: " + s.getName());
-                    }
-                });
             }
 
             // Init Selections

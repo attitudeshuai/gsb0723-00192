@@ -2,6 +2,7 @@ package com.example.courseselection.service;
 
 import com.example.courseselection.dto.MakeupExamDTO;
 import com.example.courseselection.entity.Selection;
+import com.example.courseselection.exception.DuplicateSelectionException;
 import com.example.courseselection.repository.SelectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,18 @@ public class SelectionService {
     }
 
     public Selection save(Selection selection) {
-        if (selection.getGrade() != null && selection.getGrade() >= 0 && selection.getGrade() <= 100) {
-            throw new RuntimeException("成绩必须在 0 到 100 之间");
+        if (selection.getGrade() != null && (selection.getGrade() < 0 || selection.getGrade() > 100)) {
+            throw new IllegalArgumentException("成绩必须在 0 到 100 之间");
+        }
+        if (selection.getStudent() != null && selection.getCourse() != null) {
+            Long studentId = selection.getStudent().getId();
+            Long courseId = selection.getCourse().getId();
+            boolean exists = selection.getId() == null
+                    ? selectionRepository.existsByStudentIdAndCourseId(studentId, courseId)
+                    : selectionRepository.existsByStudentIdAndCourseIdAndIdNot(studentId, courseId, selection.getId());
+            if (exists) {
+                throw new DuplicateSelectionException("该学生已选过此课程，不能重复选课");
+            }
         }
         return selectionRepository.save(selection);
     }

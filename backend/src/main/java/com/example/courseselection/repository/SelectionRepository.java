@@ -11,6 +11,10 @@ import java.util.List;
 public interface SelectionRepository extends JpaRepository<Selection, Long> {
     List<Selection> findByStudentId(Long studentId);
 
+    boolean existsByStudentIdAndCourseId(Long studentId, Long courseId);
+
+    boolean existsByStudentIdAndCourseIdAndIdNot(Long studentId, Long courseId, Long id);
+
     @Query(value = "SELECT student_number AS studentNumber, class_name AS className, student_name AS studentName, course_name AS courseName, grade, major_name AS majorName FROM makeup_exam_view WHERE major_name = :majorName", nativeQuery = true)
     List<MakeupExamDTO> findMakeupExamsByMajor(@Param("majorName") String majorName);
 }

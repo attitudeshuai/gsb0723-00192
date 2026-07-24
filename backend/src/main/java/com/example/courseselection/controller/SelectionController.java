@@ -2,6 +2,7 @@ package com.example.courseselection.controller;
 
 import com.example.courseselection.dto.MakeupExamDTO;
 import com.example.courseselection.entity.Selection;
+import com.example.courseselection.exception.GradeAlreadyEnteredException;
 import com.example.courseselection.service.SelectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +40,8 @@ public class SelectionController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         Selection selection = selectionService.findById(id).orElse(null);
-        if (selection != null && selection.getGrade() == null) {
-            throw new RuntimeException("已录入成绩不可退选");
+        if (selection != null && selection.getGrade() != null) {
+            throw new GradeAlreadyEnteredException("已录入成绩不可退选");
         }
         selectionService.deleteById(id);
     }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,7 +28,7 @@ public class AuthController {
         var adminOpt = adminRepository.findByUsername(loginRequest.getUsername());
         if (adminOpt.isPresent()) {
             var admin = adminOpt.get();
-            if (admin.getPassword().equals(loginRequest.getPassword())) {
+            if (Objects.equals(admin.getPassword(), loginRequest.getPassword())) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("token", "admin-token-" + admin.getId());
                 response.put("username", admin.getUsername());
@@ -40,12 +41,7 @@ public class AuthController {
         var studentOpt = studentRepository.findByStudentNumber(loginRequest.getUsername());
         if (studentOpt.isPresent()) {
             var student = studentOpt.get();
-            // Check password (assuming password field exists and is populated)
-            String dbPassword = student.getPassword(); 
-            // Default to 123456 if null (for compatibility with old data if not migrated)
-            if (dbPassword == null) dbPassword = "123456"; 
-            
-            if ("123456".equals(loginRequest.getPassword())) {
+            if (Objects.equals(student.getPassword(), loginRequest.getPassword())) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("token", "student-token-" + student.getId());
                 response.put("username", student.getName());

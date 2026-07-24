@@ -14,7 +14,7 @@
           text-color="#bfcbd9"
           active-text-color="#409EFF"
         >
-<template v-if="role === 'admin'">
+        <template v-if="role === 'admin'">
           <el-menu-item index="/students">
             <el-icon><User /></el-icon>
             <template #title>学生管理</template>
@@ -159,8 +159,8 @@ const submitPasswordChange = async () => {
   await passwordFormRef.value.validate(async (valid) => {
     if (valid) {
       try {
-        await request.put(`/students/${userId.value}/password`, passwordForm.newPassword, {
-           headers: { 'Content-Type': 'text/plain' }
+        await request.put(`/students/${userId.value}/password`, {
+          newPassword: passwordForm.newPassword
         })
         ElMessage.success('密码修改成功')
         passwordDialogVisible.value = false

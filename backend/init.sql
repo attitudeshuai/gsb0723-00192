@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS student (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     student_number VARCHAR(20) NOT NULL UNIQUE,
     name VARCHAR(50) NOT NULL,
+    password VARCHAR(100) NOT NULL DEFAULT '123456',
     gender VARCHAR(10) NOT NULL,
     birth_date DATE,
     hometown VARCHAR(100),
@@ -64,12 +65,12 @@ INSERT INTO course (course_number, name, credits) SELECT 'CS101', '数据库原�
 INSERT INTO course (course_number, name, credits) SELECT 'CS102', '操作系统', 4 WHERE NOT EXISTS (SELECT * FROM course WHERE course_number = 'CS102');
 
 -- Insert Students (Assuming IDs 1 and 2 for majors, but better to subquery)
-INSERT INTO student (student_number, name, gender, birth_date, hometown, class_name, major_id) 
-SELECT '2023001', '张三', '男', '2000-01-01', '北京', '计科1班', (SELECT id FROM major WHERE name = '计算机科学与技术') 
+INSERT INTO student (student_number, name, password, gender, birth_date, hometown, class_name, major_id) 
+SELECT '2023001', '张三', '123456', '男', '2000-01-01', '北京', '计科1班', (SELECT id FROM major WHERE name = '计算机科学与技术') 
 WHERE NOT EXISTS (SELECT * FROM student WHERE student_number = '2023001');
 
-INSERT INTO student (student_number, name, gender, birth_date, hometown, class_name, major_id) 
-SELECT '2023002', '李四', '女', '2000-02-02', '上海', '软件1班', (SELECT id FROM major WHERE name = '软件工程') 
+INSERT INTO student (student_number, name, password, gender, birth_date, hometown, class_name, major_id) 
+SELECT '2023002', '李四', '123456', '女', '2000-02-02', '上海', '软件1班', (SELECT id FROM major WHERE name = '软件工程') 
 WHERE NOT EXISTS (SELECT * FROM student WHERE student_number = '2023002');
 
 -- Insert Selections
