@@ -417,8 +417,35 @@ const handleSave = async () => {
     dialogVisible.value = false
     fetchData()
   } catch (error) {
-    ElMessage.error('保存失败')
+    const msg = error.response?.data?.message || '保存失败'
+    ElMessage.error(msg)
   }
+}
+
+const handleChangePassword = (row) => {
+  passwordForm.value = {
+    id: row.id,
+    newPassword: '',
+    confirmPassword: ''
+  }
+  passwordDialogVisible.value = true
+}
+
+const submitPasswordChange = async () => {
+  if (!passwordFormRef.value) return
+  await passwordFormRef.value.validate(async (valid) => {
+    if (valid) {
+      try {
+        await request.put(`/students/${passwordForm.value.id}/password`, {
+          newPassword: passwordForm.value.newPassword
+        })
+        ElMessage.success('密码修改成功')
+        passwordDialogVisible.value = false
+      } catch (error) {
+        ElMessage.error('密码修改失败')
+      }
+    }
+  })
 }
 
 onMounted(() => {

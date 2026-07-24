@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS student (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     student_number VARCHAR(20) NOT NULL UNIQUE,
     name VARCHAR(50) NOT NULL,
+    password VARCHAR(100) DEFAULT '123456',
     gender VARCHAR(10) NOT NULL,
     birth_date DATE,
     hometown VARCHAR(100),
